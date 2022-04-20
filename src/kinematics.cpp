@@ -45,15 +45,22 @@ void inverseKinematics(const Eigen::Vector3f& target, Bone* start, Bone* end, Po
   // TODO
   // Hint:
   //   1. Traverse from end to start is easier than start to end (since there is only 1 parent)
+  //   2. If start bone is not reachable from end. Go to root first.
   // Note:
   //   1. Both start and end should be in the list
-  //   2. start bone is guaranteed to be reachable from end bone.
   Bone* current = end;
-  while (current != nullptr && current != start->parent) {
+  while (current != nullptr) {
     boneList.emplace_back(current);
+    if (current == start) break;
     current = current->parent;
   }
-  // End TODO
+  if (current == nullptr) {
+    current = start;
+    while (current != nullptr) {
+      if (current->idx) boneList.emplace_back(current);
+      current = current->parent;
+    }
+  }
   size_t boneNum = boneList.size();
   Eigen::Matrix3Xf jacobian(3, 3 * boneNum);
   jacobian.setZero();

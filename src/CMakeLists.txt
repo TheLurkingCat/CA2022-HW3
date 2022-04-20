@@ -12,6 +12,7 @@ set(HW3_SOURCE
   ${HW3_SOURCE_DIR}/posture.cpp
   ${HW3_SOURCE_DIR}/shader.cpp
   ${HW3_SOURCE_DIR}/skeleton.cpp
+  ${HW3_SOURCE_DIR}/sphere.cpp
   ${HW3_SOURCE_DIR}/utils.cpp
   ${HW3_SOURCE_DIR}/vertexarray.cpp
 )

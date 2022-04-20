@@ -10,4 +10,5 @@
 #include "motion.h"
 #include "shader.h"
 #include "skeleton.h"
+#include "sphere.h"
 #include "utils.h"

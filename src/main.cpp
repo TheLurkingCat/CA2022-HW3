@@ -96,12 +96,15 @@ int main() {
 
   Skeleton skeleton(findPath("skeleton.asf"), 0.4f);
   Cylinder cylinder(skeleton.size());
+  Sphere ball(1);
   Motion ik(findPath("IK.amc"), skeleton);
-
+  Motion backup(ik);
   skeleton.setModelMatrix(cylinder.modelMatrix());
-  // Fixme: This should be in GUI
-  Eigen::Vector3f target(-0.0692501f, 3.85358f, -1.63441f);
-  inverseKinematics(target, skeleton.bone(11), skeleton.bone(29), ik.posture(0));
+
+  Eigen::Affine3f model = Eigen::Affine3f::Identity();
+  forwardKinematics(ik.posture(0), skeleton.bone(0));
+  model.translate(target).scale(0.2f);
+  ball.modelMatrix(0) = model.matrix();
 
   while (!glfwWindowShouldClose(window)) {
     // Polling events.
@@ -113,15 +116,34 @@ int main() {
       camera.updateProjection();
       cameraChanged = true;
     }
+    if (resetTrigger) {
+      ik = backup;
+      isIKChanged = true;
+      forwardKinematics(ik.posture(0), skeleton.bone(0));
+      model.setIdentity();
+      model.translate(target).scale(0.2f);
+      ball.modelMatrix(0) = model.matrix();
+    }
+    if (isIKChanged) {
+      if (isPlaying) {
+        inverseKinematics(target, skeleton.bone(startBoneID), skeleton.bone(endBoneID), ik.posture(0));
+        isIKChanged = false;
+      }
+      model.setIdentity();
+      model.translate(target).scale(0.2f);
+      ball.modelMatrix(0) = model.matrix();
+    }
+
     if (cameraChanged) {
       cameraUBO.load(0, 16 * sizeof(GLfloat), camera.viewProjectionMatrix().data());
       cameraUBO.load(16 * sizeof(GLfloat), 4 * sizeof(GLfloat), camera.position().data());
     }
-    // Render original motion
-    forwardKinematics(ik.posture(0), skeleton.bone(0));
+    // Render motion
     skeleton.setModelMatrix(cylinder.modelMatrix());
     renderer.setUniform("inputColor", Eigen::Vector4f(0.0f, 0.5f, 1.0f, 1.0f));
     cylinder.draw();
+    renderer.setUniform("inputColor", Eigen::Vector4f(0.8f, 0.0f, 0.0f, 1.0f));
+    ball.draw();
     gui.render();
 
 #ifdef __APPLE__
