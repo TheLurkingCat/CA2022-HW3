@@ -67,7 +67,6 @@ int main() {
   glClearColor(0, 0, 0, 1);
   glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &alignSize);
 
-  int speedMultiplier = std::max(1, context.getRefreshRate() / 50);
   GUI gui(window, context.getOpenGLVersion());
   // Initialize shaders
   ShaderProgram renderer;

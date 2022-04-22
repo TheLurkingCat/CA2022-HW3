@@ -12,14 +12,11 @@ void renderMainPanel() {
   ImGui::SetNextWindowBgAlpha(0.2f);
 
   if (ImGui::Begin(ICON_CODE " Control")) {
-    if (!isPlaying) {
-      isIKChanged |= ImGui::InputInt("Start bone", &startBoneID, 1, 1);
-      isIKChanged |= ImGui::InputInt("End   bone", &endBoneID, 1, 1);
-      isIKChanged |= ImGui::InputFloat3("Target", target.data());
-    }
-    if (ImGui::Button(isPlaying ? "Stop" : "Start")) {
-      isPlaying = !isPlaying;
-    }
+    int flag = isPlaying ? ImGuiInputTextFlags_ReadOnly : 0;
+    isIKChanged |= ImGui::InputInt("Start bone", &startBoneID, 1, 1, flag);
+    isIKChanged |= ImGui::InputInt("End   bone", &endBoneID, 1, 1, flag);
+    isIKChanged |= ImGui::InputFloat3("Target", target.data());
+    if (ImGui::Button(isPlaying ? "Stop" : "Start")) isPlaying = !isPlaying;
     ImGui::SameLine();
     resetTrigger = ImGui::Button("Reset");
   }

@@ -47,7 +47,7 @@ bool Motion::readAMCFile(const std::string &filename, const Skeleton &skeleton) 
       rx *= static_cast<float>(EIGEN_PI / 180.0L);
       ry *= static_cast<float>(EIGEN_PI / 180.0L);
       rz *= static_cast<float>(EIGEN_PI / 180.0L);
-
+      current_posture.eulerAngle[bone_idx] = Eigen::Vector3f(rx, ry, rz);
       current_posture.rotations[bone_idx] = Eigen::AngleAxisf(rz, Eigen::Vector3f::UnitZ()) *
                                             Eigen::AngleAxisf(ry, Eigen::Vector3f::UnitY()) *
                                             Eigen::AngleAxisf(rx, Eigen::Vector3f::UnitX());

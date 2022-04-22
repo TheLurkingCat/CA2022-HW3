@@ -70,34 +70,40 @@ void inverseKinematics(const Eigen::Vector3f& target, Bone* start, Bone* end, Po
     Eigen::Vector3f desiredVector = target - end->endPosition;
     if (desiredVector.norm() < epsilon) break;
     // TODO (compute jacobian)
+    //   1. Compute arm vectors
+    //   2. Compute jacobian columns
     // Hint:
     //   1. You should not put rotation in jacobian if it doesn't have that DoF.
-    for (size_t j = 0, column = 0; j < boneNum; j++, column += 3) {
+    //   2. jacobian.col(/* some column index */) = /* jacobian column */
+    for (size_t j = 0; j < boneNum; j++) {
       const auto& bone = *boneList[j];
       Eigen::Vector3f armVector = end->endPosition - bone.startPosition;
       Eigen::Matrix3f rotation = bone.rotation.toRotationMatrix();
-      if (bone.dofrx) jacobian.col(column + 0) = rotation.col(0).normalized().cross(armVector);
-      if (bone.dofry) jacobian.col(column + 1) = rotation.col(1).normalized().cross(armVector);
-      if (bone.dofrz) jacobian.col(column + 2) = rotation.col(2).normalized().cross(armVector);
+      if (bone.dofrx) jacobian.col(3 * j) = rotation.col(0).normalized().cross(armVector);
+      if (bone.dofry) jacobian.col(3 * j + 1) = rotation.col(1).normalized().cross(armVector);
+      if (bone.dofrz) jacobian.col(3 * j + 2) = rotation.col(2).normalized().cross(armVector);
     }
-    // End TODO
+
     Eigen::VectorXf deltaTheta = step * leastSquareSolver(jacobian, desiredVector);
     // TODO (update rotation)
+    //   1. Update posture's eulerAngle using deltaTheta
     // Hint:
-    //   1. Use .toRotationMatrix().eulerAngles(2, 1, 0).reverse() to get euler angles from quaternion
-    //   2. It returns radian, not degree.
+    //   1. Use posture.eulerAngle to get posture's eulerAngle
+    //   2. All angles are in radians.
     //   3. You can ignore rotation limit of the bone.
+    // Bonus:
+    //   1. You cannot ignore rotation limit of the bone.
 
-    for (size_t j = 0, column = 0; j < boneNum; j++, column += 3) {
+    for (size_t j = 0; j < boneNum; j++) {
       const auto& bone = *boneList[j];
-      Eigen::Vector3f angle = posture.rotations[bone.idx].toRotationMatrix().eulerAngles(2, 1, 0).reverse();
-      angle += deltaTheta.segment<3>(column);
-      posture.rotations[bone.idx] = Eigen::AngleAxisf(angle[2], Eigen::Vector3f::UnitZ()) *
-                                    Eigen::AngleAxisf(angle[1], Eigen::Vector3f::UnitY()) *
-                                    Eigen::AngleAxisf(angle[0], Eigen::Vector3f::UnitX());
+      posture.eulerAngle[bone.idx] += deltaTheta.segment<3>(3 * j);
+      posture.eulerAngle[bone.idx][0] = std::clamp(posture.eulerAngle[bone.idx][0], bone.rxmin, bone.rxmax);
+      posture.eulerAngle[bone.idx][1] = std::clamp(posture.eulerAngle[bone.idx][1], bone.rymin, bone.rymax);
+      posture.eulerAngle[bone.idx][2] = std::clamp(posture.eulerAngle[bone.idx][2], bone.rzmin, bone.rzmax);
+
+      posture.rotations[bone.idx] = Eigen::AngleAxisf(posture.eulerAngle[bone.idx][2], Eigen::Vector3f::UnitZ()) *
+                                    Eigen::AngleAxisf(posture.eulerAngle[bone.idx][1], Eigen::Vector3f::UnitY()) *
+                                    Eigen::AngleAxisf(posture.eulerAngle[bone.idx][0], Eigen::Vector3f::UnitX());
     }
   }
 }
-
-// Bonus:
-// You can implementation another IK solver, in this homework we use inverse-jacobian solver.
