@@ -38,6 +38,7 @@
     <ClCompile Include="..\src\posture.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
     <ClCompile Include="..\src\skeleton.cpp" />
+    <ClCompile Include="..\src\sphere.cpp" />
     <ClCompile Include="..\src\utils.cpp" />
     <ClCompile Include="..\src\vertexarray.cpp" />
   </ItemGroup>
@@ -49,13 +50,14 @@
     <ClInclude Include="..\include\cylinder.h" />
     <ClInclude Include="..\include\glcontext.h" />
     <ClInclude Include="..\include\gui.h" />
-    <ClInclude Include="..\include\hw2.h" />
+    <ClInclude Include="..\include\hw3.h" />
     <ClInclude Include="..\include\icons.h" />
     <ClInclude Include="..\include\kinematics.h" />
     <ClInclude Include="..\include\motion.h" />
     <ClInclude Include="..\include\posture.h" />
     <ClInclude Include="..\include\shader.h" />
     <ClInclude Include="..\include\skeleton.h" />
+    <ClInclude Include="..\include\sphere.h" />
     <ClInclude Include="..\include\utils.h" />
     <ClInclude Include="..\include\vertexarray.h" />
   </ItemGroup>

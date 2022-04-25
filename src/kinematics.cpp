@@ -37,8 +37,8 @@ Eigen::VectorXf leastSquareSolver(const Eigen::Matrix3Xf& jacobian, const Eigen:
 
 void inverseKinematics(const Eigen::Vector3f& target, Bone* start, Bone* end, Posture& posture) {
   constexpr int maxIterations = 10000;
-  constexpr float epsilon = 1E-3;
-  constexpr float step = 0.1;
+  constexpr float epsilon = 1E-3f;
+  constexpr float step = 0.1f;
   // Since bone stores in bones[i] that i == bone->idx, we can use bone - bone->idx to find bones[0] which is root.
   Bone* root = start - start->idx;
   std::vector<Bone*> boneList;

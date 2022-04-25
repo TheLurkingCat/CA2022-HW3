@@ -87,6 +87,9 @@
     <ClCompile Include="..\src\skeleton.cpp">
       <Filter>來源檔案\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\sphere.cpp">
+      <Filter>來源檔案\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\bone.h">
@@ -108,9 +111,6 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="..\include\gui.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\hw2.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="..\include\icons.h">
@@ -135,6 +135,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vertexarray.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\hw3.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sphere.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
